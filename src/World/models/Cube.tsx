@@ -1,6 +1,6 @@
 import { useGLTF } from "@react-three/drei";
 import { BASE } from "../../constants";
-import { MeshPhysicalMaterial, Color, Vector3 } from "three";
+import { MeshPhysicalMaterial, Color, Vector3, Group, Mesh } from "three";
 import { ThreeElements, useFrame } from "@react-three/fiber";
 import { useRef } from "react";
 
@@ -37,45 +37,36 @@ const glassMaterial = new MeshPhysicalMaterial({
 export function Cube({ position, onClick, variant }: Props) {
   const { scene } = useGLTF(`${BASE}models/Cube.gltf`);
   const { scene: sceneCharacter } = useGLTF(`${BASE}models/${variant}.gltf`);
-  
+
   const characterRef = useRef<ThreeElements['primitive']>(null);
-  
-  // Clone models
+
   const clonedScene = scene.clone();
   const clonedCharacterScene = sceneCharacter.clone();
 
-  // Apply materials
-  clonedScene.traverse((child) => {
-    if (child.isMesh) {
+  (clonedScene as Group).traverse((child) => {
+    if (child instanceof Mesh) {
       child.material = glassMaterial;
     }
   });
 
-  clonedCharacterScene.traverse((child) => {
-    if (child.isMesh) {
+  (sceneCharacter as Group).traverse((child) => {
+    if (child instanceof Mesh) {
       child.material = sceneCharacterMaterial;
     }
   });
 
-  // Set initial position **inside** the group so it applies correctly
   clonedCharacterScene.scale.set(0.1, 0.1, 0.1);
-  clonedCharacterScene.position.set(+25, 7, 7); // Move it upwards to be visible
+  clonedCharacterScene.position.set(+25, 7, 7);
 
   const characterPosition = clonedCharacterScene.position.clone();
 
   useFrame((state) => {
     if (characterRef.current) {
       const time = state.clock.getElapsedTime();
-      
-      // Retrieve the initial position
       const initialPos: Vector3 = characterPosition || new Vector3();
-  
-      // Generate smooth random offsets
       const xOffset = Math.sin(time * 0.3 + Math.random() * 2) * 1.5;
       const yOffset = Math.sin(time * 1.5 + Math.random()) * 2;
       const zOffset = Math.cos(time * 0.4 + Math.random() * 2) * 1.5;
-  
-      // Apply movement relative to the initial position
       characterRef.current.position.set(
         initialPos.x + xOffset,
         initialPos.y + yOffset,
