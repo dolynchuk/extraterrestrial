@@ -1,1 +1,1 @@
-export const BASE = '/tensorflow-three-pose/';
+export const BASE = '/extraterrestial/';

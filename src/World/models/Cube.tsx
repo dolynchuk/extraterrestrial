@@ -35,8 +35,8 @@ const glassMaterial = new MeshPhysicalMaterial({
 });
 
 export function Cube({ position, onClick, variant }: Props) {
-  const { scene } = useGLTF(`${BASE}/Ocean-creatures/Cube.gltf`);
-  const { scene: sceneCharacter } = useGLTF(`${BASE}/Ocean-creatures/${variant}.gltf`);
+  const { scene } = useGLTF(`${BASE}models/Cube.gltf`);
+  const { scene: sceneCharacter } = useGLTF(`${BASE}models/${variant}.gltf`);
   
   const characterRef = useRef<ThreeElements['primitive']>(null);
   
