@@ -1,1 +1,1 @@
-export const BASE = '/extraterrestial/';
+export const BASE = '/extraterrestrial/';
